@@ -8,7 +8,8 @@ export default defineConfig({
       external: [
         '@capacitor/filesystem',
         '@capacitor/preferences',
-        '@capacitor/core'
+        '@capacitor/core',
+        '@capacitor/browser'
       ]
     }
   }

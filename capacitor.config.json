@@ -1,0 +1,9 @@
+{
+  "appId": "com.stackd.app",
+  "appName": "Stackd",
+  "webDir": "dist",
+  "server": {
+    "url": "https://your-vercel-url.vercel.app",
+    "cleartext": false
+  }
+}

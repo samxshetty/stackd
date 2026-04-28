@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
+const isNative = window.Capacitor?.isNativePlatform?.() ?? false
+
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -8,12 +10,17 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     setError('')
     setLoading(true)
+
+    const redirectTo = isNative
+      ? 'https://stackd-rose.vercel.app/home'
+      : `${window.location.origin}/home`
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${import.meta.env.VITE_APP_URL}/home`,
+        redirectTo,
         queryParams: {
-          hd: 'nmamit.in' // restricts to nmamit.in domain only
+          hd: 'nmamit.in'
         }
       }
     })
@@ -99,7 +106,6 @@ export default function Login() {
           transition: 'all 0.2s'
         }}
       >
-        {/* Google Icon */}
         {!loading && (
           <svg width="20" height="20" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

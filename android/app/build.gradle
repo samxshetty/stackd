@@ -16,12 +16,21 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    signingConfigs {
+    release {
+        storeFile file('C:\\Users\\samri\\stackd-key.jks')
+        storePassword "samridh@901"
+        keyAlias "stackd"
+        keyPassword "samridh@901"
     }
+}
+buildTypes {
+    release {
+        signingConfig signingConfigs.release
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+}
 }
 
 repositories {

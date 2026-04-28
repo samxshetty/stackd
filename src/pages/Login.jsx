@@ -11,10 +11,11 @@ export default function Login() {
     try {
       const native = !!(window.Capacitor?.isNativePlatform?.())
       if (native) {
+        // Mobile APK — uses deep link scheme
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            redirectTo: 'https://stackd-rose.vercel.app/home',
+            redirectTo: 'com.stackd.app://home',
             queryParams: { hd: 'nmamit.in' },
             skipBrowserRedirect: true
           }
@@ -22,6 +23,7 @@ export default function Login() {
         if (error) throw error
         window.open(data.url, '_system')
       } else {
+        // Web browser — uses Vercel URL
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {

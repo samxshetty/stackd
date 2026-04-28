@@ -11,7 +11,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/home',
+        redirectTo: `${import.meta.env.VITE_APP_URL}/home`,
         queryParams: {
           hd: 'nmamit.in' // restricts to nmamit.in domain only
         }

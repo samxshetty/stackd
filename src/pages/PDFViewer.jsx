@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Filesystem, Directory } from '@capacitor/filesystem'
 import { useEffect, useState } from 'react'
+
+const isNative = window.Capacitor?.isNativePlatform?.() ?? false
 
 export default function PDFViewer() {
   const { state } = useLocation()
@@ -12,8 +13,9 @@ export default function PDFViewer() {
   }, [])
 
   const loadPDF = async () => {
-    if (state?.isOffline && state?.localPath) {
+    if (isNative && state?.isOffline && state?.localPath) {
       try {
+        const { Filesystem, Directory } = await import('@capacitor/filesystem')
         const result = await Filesystem.readFile({
           path: state.localPath,
           directory: Directory.Documents
@@ -42,13 +44,18 @@ export default function PDFViewer() {
         >
           ← Back
         </button>
-        <div style={{ fontSize: '15px', fontWeight: '500', color: '#fff', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <div style={{
+          fontSize: '15px', fontWeight: '500', color: '#fff',
+          flex: 1, overflow: 'hidden',
+          textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+        }}>
           {state?.note?.title || 'PDF Viewer'}
         </div>
         {state?.isOffline && (
           <span style={{
             background: 'rgba(251,146,60,0.15)', color: '#fb923c',
-            padding: '4px 10px', borderRadius: '8px', fontSize: '11px', fontWeight: '600'
+            padding: '4px 10px', borderRadius: '8px',
+            fontSize: '11px', fontWeight: '600'
           }}>
             OFFLINE
           </span>

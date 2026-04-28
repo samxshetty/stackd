@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Filesystem, Directory } from '@capacitor/filesystem'
-import { Preferences } from '@capacitor/preferences'
+
+const isNative = window.Capacitor?.isNativePlatform?.() ?? false
 
 export default function Notes() {
   const { subjectId } = useParams()
@@ -31,6 +31,8 @@ export default function Notes() {
   }
 
   const loadSavedNotes = async () => {
+    if (!isNative) return
+    const { Preferences } = await import('@capacitor/preferences')
     const { value } = await Preferences.get({ key: 'savedNotes' })
     if (value) setSavedNotes(JSON.parse(value))
   }
@@ -41,8 +43,11 @@ export default function Notes() {
   }
 
   const downloadNote = async (note) => {
+    if (!isNative) return
     setDownloading(prev => ({ ...prev, [note.id]: true }))
     try {
+      const { Filesystem, Directory } = await import('@capacitor/filesystem')
+      const { Preferences } = await import('@capacitor/preferences')
       const url = getPublicUrl(note.file_url)
       const response = await fetch(url)
       const blob = await response.blob()
@@ -55,9 +60,9 @@ export default function Notes() {
         recursive: true
       })
 
-      const newSaved = { 
-        ...savedNotes, 
-        [note.id]: { ...note, localPath: `stackd/${note.id}.pdf` } 
+      const newSaved = {
+        ...savedNotes,
+        [note.id]: { ...note, localPath: `stackd/${note.id}.pdf` }
       }
       setSavedNotes(newSaved)
       await Preferences.set({ key: 'savedNotes', value: JSON.stringify(newSaved) })

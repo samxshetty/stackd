@@ -3,7 +3,7 @@
   "appName": "Stackd",
   "webDir": "dist",
   "server": {
-    "url": "https://your-vercel-url.vercel.app",
+    "url": "https://stackd-rose.vercel.app/",
     "cleartext": false
   }
 }

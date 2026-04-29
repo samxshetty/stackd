@@ -6,10 +6,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       external: [
-        '@capacitor/filesystem',
-        '@capacitor/preferences',
         '@capacitor/core',
-        '@capacitor/browser'
+        '@capacitor/app',
+        '@capacitor/browser',
+        '@capacitor/filesystem',
+        '@capacitor/preferences'
       ]
     }
   }

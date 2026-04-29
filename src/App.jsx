@@ -11,29 +11,28 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setLoading(false)
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
 
-    // Handle deep link redirect from Google OAuth on mobile
     const setupDeepLink = async () => {
       try {
         const { App: CapApp } = await import('@capacitor/app')
+        const { Browser } = await import('@capacitor/browser')
         CapApp.addListener('appUrlOpen', async ({ url }) => {
           if (url.includes('access_token') || url.includes('code=')) {
-            const { data, error } = await supabase.auth.getSessionFromUrl({ url })
+            await Browser.close()
+            const { data } = await supabase.auth.getSessionFromUrl({ url })
             if (data?.session) setSession(data.session)
           }
         })
       } catch (e) {
-        // Not running in native context, skip
+        // Not native, skip
       }
     }
 

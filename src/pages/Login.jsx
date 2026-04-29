@@ -11,7 +11,6 @@ export default function Login() {
     try {
       const native = !!(window.Capacitor?.isNativePlatform?.())
       if (native) {
-        // Mobile APK — uses deep link scheme
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
@@ -21,9 +20,9 @@ export default function Login() {
           }
         })
         if (error) throw error
-        window.open(data.url, '_system')
+        const { Browser } = await import('@capacitor/browser')
+        await Browser.open({ url: data.url })
       } else {
-        // Web browser — uses Vercel URL
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
@@ -50,7 +49,6 @@ export default function Login() {
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* Glow effects */}
       <div style={{
         position: 'absolute', top: '-80px', right: '-80px',
         width: '300px', height: '300px', borderRadius: '50%',
@@ -64,7 +62,6 @@ export default function Login() {
         pointerEvents: 'none'
       }} />
 
-      {/* Logo */}
       <div style={{ marginBottom: '48px' }}>
         <div style={{ fontSize: '52px', fontWeight: '700', letterSpacing: '-1px' }}>
           <span style={{ color: '#fb923c' }}>Stack</span>
@@ -75,7 +72,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Welcome text */}
       <div style={{ marginBottom: '40px' }}>
         <div style={{ fontSize: '24px', fontWeight: '600', color: '#fff', marginBottom: '8px' }}>
           Welcome 👋
@@ -85,7 +81,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Error */}
       {error && (
         <div style={{
           color: '#f87171', fontSize: '13px',
@@ -97,7 +92,6 @@ export default function Login() {
         </div>
       )}
 
-      {/* Google Button */}
       <button
         onClick={handleGoogleLogin}
         disabled={loading}

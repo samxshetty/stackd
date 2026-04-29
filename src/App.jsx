@@ -22,17 +22,18 @@ function App() {
 
     const setupDeepLink = async () => {
       try {
-        const { App: CapApp } = await import('@capacitor/app')
-        const { Browser } = await import('@capacitor/browser')
+        const CapApp = window.Capacitor?.Plugins?.App
+        const Browser = window.Capacitor?.Plugins?.Browser
+        if (!CapApp) return
         CapApp.addListener('appUrlOpen', async ({ url }) => {
           if (url.includes('access_token') || url.includes('code=')) {
-            await Browser.close()
+            if (Browser) await Browser.close()
             const { data } = await supabase.auth.getSessionFromUrl({ url })
             if (data?.session) setSession(data.session)
           }
         })
       } catch (e) {
-        // Not native, skip
+        console.log('Not native:', e)
       }
     }
 

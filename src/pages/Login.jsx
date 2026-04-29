@@ -20,8 +20,7 @@ export default function Login() {
           }
         })
         if (error) throw error
-        const { Browser } = await import('@capacitor/browser')
-        await Browser.open({ url: data.url })
+        window.Capacitor.Plugins.Browser.open({ url: data.url })
       } else {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
